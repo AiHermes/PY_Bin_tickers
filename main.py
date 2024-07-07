@@ -18,13 +18,23 @@ def fetch_binance_futures_tickers():
     url = "https://fapi.binance.com/fapi/v1/ticker/24hr"
     
     print(f"Fetching data from {url}")
-    response = requests.get(url)
     
-    print(f"Response status code: {response.status_code}")
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print("Failed to fetch data from Binance API")
+    # Прокси-сервер с авторизацией
+    proxies = {
+        "http": "http://buysellstyle:XPyp6tmBTc@45.145.221.74:50100",
+        "https": "http://buysellstyle:XPyp6tmBTc@45.145.221.74:50100",
+    }
+    
+    try:
+        response = requests.get(url, proxies=proxies)
+        print(f"Response status code: {response.status_code}")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print("Failed to fetch data from Binance API")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
         return None
 
 def filter_tickers_by_volume(tickers):
