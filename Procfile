@@ -1,1 +1,1 @@
-worker: python Bin_get_tickers.py
+web: python main.py
