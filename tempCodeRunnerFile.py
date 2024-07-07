@@ -1,26 +1,10 @@
 import requests
-import socket
-
-def internet_connected(host="8.8.8.8", port=53, timeout=3):
-    try:
-        socket.setdefaulttimeout(timeout)
-        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
-        return True
-    except socket.error as ex:
-        print(f"No internet connection: {ex}")
-        return False
 
 def fetch_binance_futures_tickers():
-    if not internet_connected():
-        print("No internet connection")
-        return None
-
     url = "https://fapi.binance.com/fapi/v1/ticker/24hr"
     
-    print(f"Fetching data from {url}")
     response = requests.get(url)
     
-    print(f"Response status code: {response.status_code}")
     if response.status_code == 200:
         return response.json()
     else:
@@ -54,7 +38,6 @@ def main():
     tickers_data = fetch_binance_futures_tickers()
     
     if tickers_data:
-        print(f"Fetched {len(tickers_data)} tickers")
         high_volume_tickers, mid_volume_tickers = filter_tickers_by_volume(tickers_data)
         
         save_tickers_to_file(high_volume_tickers, "1bin.txt")
